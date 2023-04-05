@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import TextField from "@mui/material/TextField";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
@@ -21,6 +21,7 @@ import { StoreDispatch } from "../redux/store";
 import { IColumnLayoutProps } from "../types";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 import { Typography } from "@mui/material";
+
 const ColumnLayout: React.FC<IColumnLayoutProps> = ({
   labelText,
   addHandler,
@@ -39,7 +40,6 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
 
   const [duration, setDuration] = useState(0);
   const [textDescription, setTextDescription] = useState("");
-  const [existingDescription, setExistingDescription] = useState("");
   const dispatch = useDispatch<StoreDispatch>();
 
   const handleOnChange = ({
@@ -97,23 +97,8 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
     }
   };
 
-  const handleInputChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) => {
-    setExistingDescription(value);
-    console.log(existingDescription);
-
-    setIsError({
-      isShow: value.length > 200,
-      text:
-        value.length > 200
-          ? "The input value cannot be more than 200 characters"
-          : "",
-    });
-  };
-
   return (
-    <Box borderRadius={1} width="100%" sx={{ boxShadow: 2, p: 3 }}>
+    <Box width="100%" sx={{ boxShadow: 2 }}>
       <Collapse in={isError.isShow}>
         <Alert severity="error" sx={{ my: 1 }}>
           {isError.text}
@@ -124,7 +109,10 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
         {(provided) => (
           <List
             sx={{
-              minHeight: "300px",
+              padding: "0px ! important",
+              minHeight: "450px",
+              maxHeight: "450px",
+              overflow: "auto",
               li: {
                 flexDirection: "column",
               },
@@ -137,15 +125,7 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
           >
             {selectorState.map(
               (
-                {
-                  id,
-                  text,
-                  isFinished,
-                  createdAt,
-                  updatedAt,
-                  isTextShowed,
-                  duration,
-                },
+                { id, text, isFinished, createdAt, updatedAt, duration },
                 index: number
               ) => (
                 <Draggable key={id} draggableId={id} index={index}>
@@ -154,10 +134,10 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                       sx={{
                         transition: ".3s ease background-color",
                         color: snapshot.isDragging ? "#fff" : "#000",
-                        bgcolor: snapshot.isDragging ? "#000" : "#fff",
+                        bgcolor: snapshot.isDragging ? "#565554" : "#F6F5AE",
                         position: "relative",
                         my: 1,
-                        borderRadius: "3px",
+                        paddingLeft: "0px ! important",
                         "& .MuiTypography-root": {
                           display: "flex",
                           alignItems: "center",
@@ -191,26 +171,6 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                             )
                           }
                         />
-                        {/* <IconButton
-                          sx={{ p: 1, mr: 1 }}
-                          onClick={() =>
-                            dispatch(
-                              updateTextShowed({
-                                id,
-                                duration,
-                                isTextShowed: !isTextShowed,
-                              })
-                            )
-                          }
-                        >
-                          <EditOutlinedIcon
-                            sx={{
-                              color: snapshot.isDragging ? "#fff" : "#000",
-                              transform: !isTextShowed ? "rotate(180deg)" : "",
-                            }}
-                          />
-                        </IconButton> */}
-
                         <Box
                           component="span"
                           width="100%"
@@ -221,14 +181,19 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                           {updatedAt ? "Updated" : "Created"} at:{" "}
                           {updatedAt || createdAt}
                         </Box>
-
-                        {/* <Box component="span" width="100%">
-                          {text}
-                        </Box> */}
                         <Box component="span" width="100%">
                           <TextField
                             fullWidth
-                            onChange={(e) => dispatch(updateTextShowed(id, e.target.value))}
+                            onChange={(e) =>
+                              dispatch(
+                                updateTextShowed({
+                                  id,
+                                  text: e.target.value,
+                                  isFinished,
+                                  duration,
+                                })
+                              )
+                            }
                             value={text}
                             size="small"
                             sx={{
@@ -271,12 +236,6 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                           </IconButton>
                         </Box>
                       </ListItemText>
-                      <Collapse in={isTextShowed}>
-                        You can add here some content{" "}
-                        <span role="img" aria-label="emoji">
-                          😍
-                        </span>
-                      </Collapse>
                     </ListItem>
                   )}
                 </Draggable>
@@ -286,39 +245,9 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
           </List>
         )}
       </Droppable>
-      <Grid container alignItems="center">
-        <Grid item xs={1}>
-          <IconButton
-            onClick={handleOnClick}
-            onKeyDown={({ key }) => key === "Enter" && handleOnClick()}
-            disabled={
-              textDescription.length === 0 || textDescription.length > 200
-            }
-          >
-            <AddCircleOutlineOutlinedIcon />
-          </IconButton>
-        </Grid>
-        <Grid item xs={7}>
-          <TextField
-            fullWidth
-            label={labelText}
-            onChange={handleOnChange}
-            onBlur={handleOnBlur}
-            onKeyDown={handleInputKeyDown}
-            value={textDescription}
-            size="small"
-            sx={{ border: "none", "& fieldset": { border: "none" } }}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <Box display="flex" component="span">
-            <IconButton onClick={decrementDuration}>
-              <IndeterminateCheckBoxOutlinedIcon />
-            </IconButton>
-            <IconButton>{duration}</IconButton>
-            <IconButton onClick={incrementDuration}>
-              <AddBoxOutlinedIcon />
-            </IconButton>
+      <Box width="100%" sx={{ paddingTop: "25px", paddingBottom: "25px" }}>
+        <Grid container alignItems="center">
+          <Grid item xs={1}>
             <IconButton
               onClick={handleOnClick}
               onKeyDown={({ key }) => key === "Enter" && handleOnClick()}
@@ -326,11 +255,43 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                 textDescription.length === 0 || textDescription.length > 200
               }
             >
-              <KeyboardArrowRightOutlinedIcon />
+              <AddCircleOutlineOutlinedIcon />
             </IconButton>
-          </Box>
+          </Grid>
+          <Grid item xs={7}>
+            <TextField
+              fullWidth
+              label={labelText}
+              onChange={handleOnChange}
+              onBlur={handleOnBlur}
+              onKeyDown={handleInputKeyDown}
+              value={textDescription}
+              size="small"
+              sx={{ border: "none", "& fieldset": { border: "none" } }}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Box display="flex" component="span">
+              <IconButton onClick={decrementDuration}>
+                <IndeterminateCheckBoxOutlinedIcon />
+              </IconButton>
+              <IconButton>{duration}</IconButton>
+              <IconButton onClick={incrementDuration}>
+                <AddBoxOutlinedIcon />
+              </IconButton>
+              <IconButton
+                onClick={handleOnClick}
+                onKeyDown={({ key }) => key === "Enter" && handleOnClick()}
+                disabled={
+                  textDescription.length === 0 || textDescription.length > 200
+                }
+              >
+                <KeyboardArrowRightOutlinedIcon />
+              </IconButton>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </Box>
   );
 };

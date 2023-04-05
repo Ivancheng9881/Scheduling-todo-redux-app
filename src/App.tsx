@@ -10,6 +10,7 @@ import { StoreState } from './redux/store';
 import { IModel } from './types';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavBar from './components/navbar/NavBar';
+import './App.css';
 
 
 type TAllSlices = 'todo' | 'inProgress';
@@ -50,10 +51,12 @@ function App() {
   return (
     <Container>
       <BrowserRouter>
-        <NavBar />
         <Grid container justifyContent="center">
+          <Grid item xs={12}>
+            <NavBar />
+          </Grid>
           <DragDropContext onDragEnd={(res) => onDragEnd(res)}>
-            <Grid item>
+            <Grid item xs={12} className='bodyWrapper'>
               <Routes>
                 <Route path="/" element={<ToDoColumn />} />
                 <Route path="schedule" element={<InProgressColumn />} />
