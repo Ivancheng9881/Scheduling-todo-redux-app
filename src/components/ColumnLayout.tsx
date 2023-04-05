@@ -191,7 +191,6 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                             </Box>
                             <Box component="span" width="100%">
                               <TextField
-                                fullWidth
                                 onChange={(e) =>
                                   dispatch(
                                     updateTextShowed({
