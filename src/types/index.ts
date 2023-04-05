@@ -23,4 +23,6 @@ export interface IColumnLayoutProps {
   updateTextShowed: (v: IModel) => AnyAction;
   increment: (v: string) => AnyAction;
   decrement: (v: string) => AnyAction;
+  totalToDoTasks?: number;
+  totalDuration?: number;
 }

@@ -31,7 +31,9 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
   droppableId,
   updateTextShowed,
   increment,
-  decrement
+  decrement,
+  totalToDoTasks,
+  totalDuration,
 }) => {
   const [isError, setIsError] = useState({
     isShow: false,
@@ -98,7 +100,7 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
   };
 
   return (
-    <Box width="100%" sx={{ boxShadow: 2 }}>
+    <Box width="100%" sx={{ boxShadow: 2, padding: "5px" }}>
       <Collapse in={isError.isShow}>
         <Alert severity="error" sx={{ my: 1 }}>
           {isError.text}
@@ -109,7 +111,7 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
         {(provided) => (
           <List
             sx={{
-              padding: "0px ! important",
+              padding: "5px",
               minHeight: "450px",
               maxHeight: "450px",
               overflow: "auto",
@@ -151,6 +153,7 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                         sx={{
                           textDecoration: isFinished ? "line-through" : "none",
                           wordBreak: "break-word",
+                          font: snapshot.isDragging ? "#fff" : "#000",
                         }}
                       >
                         <Checkbox
@@ -160,6 +163,9 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                           value={isFinished}
                           checked={isFinished}
                           inputProps={{ "aria-label": "controlled" }}
+                          sx={{
+                            color: snapshot.isDragging ? "#fff" : "#000",
+                          }}
                           onChange={() =>
                             dispatch(
                               completedHandler({
@@ -173,10 +179,11 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                         />
                         <Box
                           component="span"
-                          width="100%"
+                          width="95%"
                           position="absolute"
-                          top="0"
-                          fontSize=".7rem"
+                          top="3px"
+                          left="10px"
+                          fontSize=".6rem"
                         >
                           {updatedAt ? "Updated" : "Created"} at:{" "}
                           {updatedAt || createdAt}
@@ -199,6 +206,9 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                             sx={{
                               border: "none",
                               "& fieldset": { border: "none" },
+                              input: {
+                                color: snapshot.isDragging ? "#fff" : "#000",
+                              },
                             }}
                           />
                         </Box>
@@ -215,11 +225,21 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                           </IconButton>
                         </Box>
                         <Box display="flex" component="span">
-                          <IconButton onClick={() => dispatch(decrement(id))}>
+                          <IconButton
+                            sx={{
+                              color: snapshot.isDragging ? "#fff" : "#000",
+                            }}
+                            onClick={() => dispatch(decrement(id))}
+                          >
                             <IndeterminateCheckBoxOutlinedIcon />
                           </IconButton>
                           <Typography align="center">{duration}</Typography>
-                          <IconButton onClick={() => dispatch(increment(id))}>
+                          <IconButton
+                            sx={{
+                              color: snapshot.isDragging ? "#fff" : "#000",
+                            }}
+                            onClick={() => dispatch(increment(id))}
+                          >
                             <AddBoxOutlinedIcon />
                           </IconButton>
                           <IconButton
@@ -232,7 +252,11 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                               textDescription.length > 200
                             }
                           >
-                            <KeyboardArrowRightOutlinedIcon />
+                            <KeyboardArrowRightOutlinedIcon
+                              sx={{
+                                color: snapshot.isDragging ? "#fff" : "#000",
+                              }}
+                            />
                           </IconButton>
                         </Box>
                       </ListItemText>
@@ -245,52 +269,58 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
           </List>
         )}
       </Droppable>
-      <Box width="100%" sx={{ paddingTop: "25px", paddingBottom: "25px" }}>
-        <Grid container alignItems="center">
-          <Grid item xs={1}>
-            <IconButton
-              onClick={handleOnClick}
-              onKeyDown={({ key }) => key === "Enter" && handleOnClick()}
-              disabled={
-                textDescription.length === 0 || textDescription.length > 200
-              }
-            >
-              <AddCircleOutlineOutlinedIcon />
-            </IconButton>
-          </Grid>
-          <Grid item xs={7}>
-            <TextField
-              fullWidth
-              label={labelText}
-              onChange={handleOnChange}
-              onBlur={handleOnBlur}
-              onKeyDown={handleInputKeyDown}
-              value={textDescription}
-              size="small"
-              sx={{ border: "none", "& fieldset": { border: "none" } }}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <Box display="flex" component="span">
-              <IconButton onClick={decrementDuration}>
-                <IndeterminateCheckBoxOutlinedIcon />
-              </IconButton>
-              <IconButton>{duration}</IconButton>
-              <IconButton onClick={incrementDuration}>
-                <AddBoxOutlinedIcon />
-              </IconButton>
-              <IconButton
-                onClick={handleOnClick}
-                onKeyDown={({ key }) => key === "Enter" && handleOnClick()}
-                disabled={
-                  textDescription.length === 0 || textDescription.length > 200
-                }
-              >
-                <KeyboardArrowRightOutlinedIcon />
-              </IconButton>
-            </Box>
-          </Grid>
+      <Box width="100%" marginTop="10px">
+        <Grid
+          container
+          spacing={1}
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Grid item>Total Tasks: {totalToDoTasks}</Grid>
+          <Grid item>Total Duration: {totalDuration}</Grid>
         </Grid>
+      </Box>
+      <Box width="100%" display="flex" flexDirection="row" justifyContent="center">
+        <IconButton
+          onClick={handleOnClick}
+          onKeyDown={({ key }) => key === "Enter" && handleOnClick()}
+          disabled={
+            textDescription.length === 0 || textDescription.length > 200
+          }
+        >
+          <AddCircleOutlineOutlinedIcon />
+        </IconButton>
+        <TextField
+          fullWidth
+          label={labelText}
+          onChange={handleOnChange}
+          onBlur={handleOnBlur}
+          onKeyDown={handleInputKeyDown}
+          value={textDescription}
+          size="medium"
+          sx={{
+            width: "400px",
+            border: "none",
+            "& fieldset": { border: "none" },
+          }}
+        />
+        <IconButton onClick={decrementDuration}>
+          <IndeterminateCheckBoxOutlinedIcon />
+        </IconButton>
+        <IconButton>{duration}</IconButton>
+        <IconButton onClick={incrementDuration}>
+          <AddBoxOutlinedIcon />
+        </IconButton>
+        <IconButton
+          onClick={handleOnClick}
+          onKeyDown={({ key }) => key === "Enter" && handleOnClick()}
+          disabled={
+            textDescription.length === 0 || textDescription.length > 200
+          }
+        >
+          <KeyboardArrowRightOutlinedIcon />
+        </IconButton>
       </Box>
     </Box>
   );

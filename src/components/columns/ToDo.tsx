@@ -3,12 +3,23 @@ import { useSelector } from 'react-redux';
 import { StoreState } from '../../redux/store';
 import { todoSlice } from '../../redux/slice/todo';
 import ColumnLayout from '../ColumnLayout';
+import { IModel } from '../../types';
 
 export function ToDoColumn() {
   const { todo } = useSelector((state: StoreState) => state);
-  
+  const totalDuration = (todoArr: IModel[]): number => {
+    return todoArr.reduce((acc, curr) => acc + curr.duration, 0);
+  }
+
   const {
-    actions: { completeStatus, remove, add, updateTextShowed, increment, decrement },
+    actions: {
+      completeStatus,
+      remove,
+      add,
+      updateTextShowed,
+      increment,
+      decrement
+    }
   } = todoSlice;
 
   return (
@@ -24,6 +35,8 @@ export function ToDoColumn() {
         updateTextShowed={updateTextShowed}
         increment={increment}
         decrement={decrement}
+        totalToDoTasks={todo.length}
+        totalDuration={totalDuration(todo)}
       />
     </>
   );
