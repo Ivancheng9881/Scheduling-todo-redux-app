@@ -13,10 +13,9 @@ import IndeterminateCheckBoxOutlinedIcon from "@mui/icons-material/Indeterminate
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { StoreDispatch } from "../redux/store";
 import { IColumnLayoutProps } from "../types";
@@ -40,6 +39,7 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
 
   const [duration, setDuration] = useState(0);
   const [textDescription, setTextDescription] = useState("");
+  const [existingDescription, setExistingDescription] = useState("");
   const dispatch = useDispatch<StoreDispatch>();
 
   const handleOnChange = ({
@@ -95,6 +95,21 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
         });
       }
     }
+  };
+
+  const handleInputChange = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    setExistingDescription(value);
+    console.log(existingDescription);
+
+    setIsError({
+      isShow: value.length > 200,
+      text:
+        value.length > 200
+          ? "The input value cannot be more than 200 characters"
+          : "",
+    });
   };
 
   return (
@@ -176,7 +191,7 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                             )
                           }
                         />
-                        <IconButton
+                        {/* <IconButton
                           sx={{ p: 1, mr: 1 }}
                           onClick={() =>
                             dispatch(
@@ -188,13 +203,13 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                             )
                           }
                         >
-                          <ArrowDownwardIcon
+                          <EditOutlinedIcon
                             sx={{
                               color: snapshot.isDragging ? "#fff" : "#000",
                               transform: !isTextShowed ? "rotate(180deg)" : "",
                             }}
                           />
-                        </IconButton>
+                        </IconButton> */}
 
                         <Box
                           component="span"
@@ -207,8 +222,20 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                           {updatedAt || createdAt}
                         </Box>
 
-                        <Box component="span" width="100%">
+                        {/* <Box component="span" width="100%">
                           {text}
+                        </Box> */}
+                        <Box component="span" width="100%">
+                          <TextField
+                            fullWidth
+                            onChange={(e) => dispatch(updateTextShowed(id, e.target.value))}
+                            value={text}
+                            size="small"
+                            sx={{
+                              border: "none",
+                              "& fieldset": { border: "none" },
+                            }}
+                          />
                         </Box>
 
                         <Box display="flex" component="span">

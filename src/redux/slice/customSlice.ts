@@ -1,6 +1,7 @@
+import { TextField } from '@mui/material/TextField';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import { TActionSlice, TUpdateTextShowed, IModel } from '../../types';
+import { TActionSlice, IModel } from '../../types';
 
 const initialState: IModel[] = [];
 
@@ -44,9 +45,9 @@ export const createCustomSlice = (name: string) => {
         state[index].isFinished = action.payload.isFinished;
         state[index].updatedAt = action.payload.updatedAt;
       },
-      updateTextShowed(state, action: PayloadAction<TUpdateTextShowed>) {
+      updateTextShowed(state, action) {
         const index = state.findIndex(({ id }) => id === action.payload.id);
-        state[index].isTextShowed = action.payload.isTextShowed;
+        console.log(state[index].text)
       },
       reorder(state, action) {
         const [removed] = state.splice(action.payload.source.index, 1);

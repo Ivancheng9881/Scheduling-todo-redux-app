@@ -20,7 +20,7 @@ export interface IColumnLayoutProps {
   completedHandler: (v: TActionSlice) => AnyAction;
   selectorState: IModel[];
   droppableId: string;
-  updateTextShowed: (v: TUpdateTextShowed) => AnyAction;
+  updateTextShowed: (v: string, k: string) => AnyAction;
   increment: (v: string) => AnyAction;
   decrement: (v: string) => AnyAction;
 }
