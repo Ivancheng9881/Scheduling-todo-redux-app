@@ -6,14 +6,13 @@ import { ToDoColumn } from './components/columns/ToDo';
 import { InProgressColumn } from './components/columns/InProgress';
 import { todoSlice as todo } from './redux/slice/todo';
 import { inProgressSlice as inProgress } from './redux/slice/inProgress';
-import { doneSlice as done } from './redux/slice/done';
 import { StoreState } from './redux/store';
 import { IModel } from './types';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavBar from './components/navbar/NavBar';
 
 
-type TAllSlices = 'todo' | 'inProgress' | 'done';
+type TAllSlices = 'todo' | 'inProgress';
 
 function App() {
   const dispatch = useDispatch();
@@ -25,7 +24,7 @@ function App() {
     }
 
     const { destination, source, draggableId } = result;
-    const allSlices = { todo, inProgress, done };
+    const allSlices = { todo, inProgress };
 
     if (destination.droppableId === source.droppableId) {
       dispatch(

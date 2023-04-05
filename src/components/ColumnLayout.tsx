@@ -16,7 +16,7 @@ import Collapse from "@mui/material/Collapse";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { StoreDispatch } from "../redux/store";
 import { IColumnLayoutProps } from "../types";
@@ -30,7 +30,8 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
   selectorState,
   droppableId,
   updateTextShowed,
-  updateDuration,
+  increment,
+  decrement
 }) => {
   const [isError, setIsError] = useState({
     isShow: false,
@@ -121,7 +122,15 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
           >
             {selectorState.map(
               (
-                { id, text, isFinished, createdAt, updatedAt, isTextShowed, duration },
+                {
+                  id,
+                  text,
+                  isFinished,
+                  createdAt,
+                  updatedAt,
+                  isTextShowed,
+                  duration,
+                },
                 index: number
               ) => (
                 <Draggable key={id} draggableId={id} index={index}>
@@ -161,6 +170,7 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                               completedHandler({
                                 isFinished: !isFinished,
                                 id,
+                                duration,
                                 updatedAt: new Date().toLocaleString(),
                               })
                             )
@@ -172,6 +182,7 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                             dispatch(
                               updateTextShowed({
                                 id,
+                                duration,
                                 isTextShowed: !isTextShowed,
                               })
                             )
@@ -212,11 +223,11 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                           </IconButton>
                         </Box>
                         <Box display="flex" component="span">
-                          <IconButton onClick={decrementDuration}>
+                          <IconButton onClick={() => dispatch(decrement(id))}>
                             <IndeterminateCheckBoxOutlinedIcon />
                           </IconButton>
                           <Typography align="center">{duration}</Typography>
-                          <IconButton onClick={incrementDuration}>
+                          <IconButton onClick={() => dispatch(increment(id))}>
                             <AddBoxOutlinedIcon />
                           </IconButton>
                           <IconButton

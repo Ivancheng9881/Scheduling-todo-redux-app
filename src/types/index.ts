@@ -4,10 +4,10 @@ export interface IModel {
   id: string;
   text: string;
   isFinished: boolean;
+  duration: number;
   createdAt?: string;
   updatedAt?: string;
   isTextShowed?: boolean;
-  duration?: number;
 }
 
 export type TActionSlice = Omit<IModel, 'text'>;
@@ -21,5 +21,6 @@ export interface IColumnLayoutProps {
   selectorState: IModel[];
   droppableId: string;
   updateTextShowed: (v: TUpdateTextShowed) => AnyAction;
-  updateDuration: (v: number) => AnyAction;
+  increment: (v: string) => AnyAction;
+  decrement: (v: string) => AnyAction;
 }

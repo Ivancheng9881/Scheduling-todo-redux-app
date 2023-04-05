@@ -6,7 +6,7 @@ const initialState: IModel[] = [];
 
 export const createCustomSlice = (name: string) => {
   const {
-    actions: { add, remove, completeStatus, reorder, update, updateTextShowed, updateDuration },
+    actions: { add, remove, completeStatus, reorder, update, updateTextShowed, increment, decrement },
     reducer,
   } = createSlice({
     name,
@@ -16,14 +16,14 @@ export const createCustomSlice = (name: string) => {
         reducer: (state, action: PayloadAction<IModel>) => {
           state.push(action.payload);
         },
-        prepare: (text: string, duration: number) => ({
+        prepare: (text: string, duration: number ) => ({
           payload: {
             id: uuidv4(),
             text,
             isFinished: false,
+            duration,
             createdAt: new Date().toLocaleString(),
             isTextShowed: false,
-            duration
           } as IModel
         }),
       },
@@ -36,6 +36,7 @@ export const createCustomSlice = (name: string) => {
       },
       remove(state, action: PayloadAction<string>) {
         const index = state.findIndex(({ id }) => id === action.payload);
+        console.log(index);
         state.splice(index, 1);
       },
       completeStatus(state, action: PayloadAction<TActionSlice>) {
@@ -51,15 +52,21 @@ export const createCustomSlice = (name: string) => {
         const [removed] = state.splice(action.payload.source.index, 1);
         state.splice(action.payload.destination.index, 0, removed);
       },
-      updateDuration(state, action) {
-        const index = state.findIndex(({ id }) => id === action.payload.id);
-        state[index].duration = action.payload.updateDuration;
+      increment(state, action) {
+        const index = state.findIndex(({ id }) => id === action.payload);
+        console.log(state[index].duration)
+        state[index].duration = state[index].duration + 1;
+      },
+      decrement(state, action) {
+        const index = state.findIndex(({ id }) => id === action.payload);
+        if (state[index].duration > 0) {
+          state[index].duration = state[index].duration - 1;
+        }
       }
-    },
-  });
+  }});
 
   return {
-    actions: { add, remove, completeStatus, reorder, update, updateTextShowed, updateDuration },
+    actions: { add, remove, completeStatus, reorder, update, updateTextShowed, increment, decrement },
     reducer,
   };
 };

@@ -8,7 +8,7 @@ export function ToDoColumn() {
   const { todo } = useSelector((state: StoreState) => state);
   
   const {
-    actions: { completeStatus, remove, add, updateTextShowed, updateDuration },
+    actions: { completeStatus, remove, add, updateTextShowed, increment, decrement },
   } = todoSlice;
 
   return (
@@ -22,7 +22,8 @@ export function ToDoColumn() {
         addHandler={add}
         selectorState={todo}
         updateTextShowed={updateTextShowed}
-        updateDuration={updateDuration}
+        increment={increment}
+        decrement={decrement}
       />
     </>
   );

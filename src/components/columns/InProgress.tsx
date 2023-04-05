@@ -8,7 +8,7 @@ export function InProgressColumn() {
   const { inProgress } = useSelector((state: StoreState) => state);
 
   const {
-    actions: { completeStatus, remove, add, updateTextShowed, updateDuration },
+    actions: { completeStatus, remove, add, updateTextShowed, increment, decrement },
   } = inProgressSlice;
 
   return (
@@ -22,7 +22,8 @@ export function InProgressColumn() {
         addHandler={add}
         selectorState={inProgress}
         updateTextShowed={updateTextShowed}
-        updateDuration={updateDuration}
+        increment={increment}
+        decrement={decrement}
       />
     </>
   );
