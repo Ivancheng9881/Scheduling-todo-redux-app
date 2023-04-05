@@ -8,6 +8,7 @@ export interface IModel {
   createdAt?: string;
   updatedAt?: string;
   isTextShowed?: boolean;
+  isScheduled?: boolean;
 }
 
 export type TActionSlice = Omit<IModel, 'text'>;
@@ -25,4 +26,5 @@ export interface IColumnLayoutProps {
   decrement: (v: string) => AnyAction;
   totalToDoTasks?: number;
   totalDuration?: number;
+  schedule: (v: string) => AnyAction;
 }

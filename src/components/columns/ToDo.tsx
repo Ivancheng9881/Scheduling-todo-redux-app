@@ -18,7 +18,8 @@ export function ToDoColumn() {
       add,
       updateTextShowed,
       increment,
-      decrement
+      decrement,
+      schedule
     }
   } = todoSlice;
 
@@ -37,6 +38,7 @@ export function ToDoColumn() {
         decrement={decrement}
         totalToDoTasks={todo.length}
         totalDuration={totalDuration(todo)}
+        schedule={schedule}
       />
     </>
   );

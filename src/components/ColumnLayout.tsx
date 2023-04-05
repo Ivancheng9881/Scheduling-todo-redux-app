@@ -34,6 +34,7 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
   decrement,
   totalToDoTasks,
   totalDuration,
+  schedule
 }) => {
   const [isError, setIsError] = useState({
     isShow: false,
@@ -132,7 +133,7 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
               ) => (
                 <Draggable key={id} draggableId={id} index={index}>
                   {(provided, snapshot) => (
-                    <ListItem
+                          <ListItem
                       sx={{
                         transition: ".3s ease background-color",
                         color: snapshot.isDragging ? "#fff" : "#000",
@@ -156,109 +157,107 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                           font: snapshot.isDragging ? "#fff" : "#000",
                         }}
                       >
-                        <Checkbox
-                          icon={<CheckCircleOutlineIcon />}
-                          checkedIcon={<CheckCircleIcon />}
-                          edge="end"
-                          value={isFinished}
-                          checked={isFinished}
-                          inputProps={{ "aria-label": "controlled" }}
-                          sx={{
-                            color: snapshot.isDragging ? "#fff" : "#000",
-                          }}
-                          onChange={() =>
-                            dispatch(
-                              completedHandler({
-                                isFinished: !isFinished,
-                                id,
-                                duration,
-                                updatedAt: new Date().toLocaleString(),
-                              })
-                            )
-                          }
-                        />
-                        <Box
-                          component="span"
-                          width="95%"
-                          position="absolute"
-                          top="3px"
-                          left="10px"
-                          fontSize=".6rem"
-                        >
-                          {updatedAt ? "Updated" : "Created"} at:{" "}
-                          {updatedAt || createdAt}
-                        </Box>
-                        <Box component="span" width="100%">
-                          <TextField
-                            fullWidth
-                            onChange={(e) =>
-                              dispatch(
-                                updateTextShowed({
-                                  id,
-                                  text: e.target.value,
-                                  isFinished,
-                                  duration,
-                                })
-                              )
-                            }
-                            value={text}
-                            size="small"
-                            sx={{
-                              border: "none",
-                              "& fieldset": { border: "none" },
-                              input: {
-                                color: snapshot.isDragging ? "#fff" : "#000",
-                              },
-                            }}
-                          />
-                        </Box>
-
-                        <Box display="flex" component="span">
-                          <IconButton
-                            onClick={() => dispatch(removeHandler(id))}
-                          >
-                            <DeleteIcon
+                            <Checkbox
+                              icon={<CheckCircleOutlineIcon />}
+                              checkedIcon={<CheckCircleIcon />}
+                              edge="end"
+                              value={isFinished}
+                              checked={isFinished}
+                              inputProps={{ "aria-label": "controlled" }}
                               sx={{
                                 color: snapshot.isDragging ? "#fff" : "#000",
                               }}
+                              onChange={() =>
+                                dispatch(
+                                  completedHandler({
+                                    isFinished: !isFinished,
+                                    id,
+                                    duration,
+                                    updatedAt: new Date().toLocaleString(),
+                                  })
+                                )
+                              }
                             />
-                          </IconButton>
-                        </Box>
-                        <Box display="flex" component="span">
-                          <IconButton
-                            sx={{
-                              color: snapshot.isDragging ? "#fff" : "#000",
-                            }}
-                            onClick={() => dispatch(decrement(id))}
-                          >
-                            <IndeterminateCheckBoxOutlinedIcon />
-                          </IconButton>
-                          <Typography align="center">{duration}</Typography>
-                          <IconButton
-                            sx={{
-                              color: snapshot.isDragging ? "#fff" : "#000",
-                            }}
-                            onClick={() => dispatch(increment(id))}
-                          >
-                            <AddBoxOutlinedIcon />
-                          </IconButton>
-                          <IconButton
-                            onClick={handleOnClick}
-                            onKeyDown={({ key }) =>
-                              key === "Enter" && handleOnClick()
-                            }
-                            disabled={
-                              textDescription.length === 0 ||
-                              textDescription.length > 200
-                            }
-                          >
-                            <KeyboardArrowRightOutlinedIcon
-                              sx={{
-                                color: snapshot.isDragging ? "#fff" : "#000",
-                              }}
-                            />
-                          </IconButton>
-                        </Box>
+                            <Box
+                              component="span"
+                              width="95%"
+                              position="absolute"
+                              top="3px"
+                              left="10px"
+                              fontSize=".6rem"
+                            >
+                              {updatedAt ? "Updated" : "Created"} at:{" "}
+                              {updatedAt || createdAt}
+                            </Box>
+                            <Box component="span" width="100%">
+                              <TextField
+                                fullWidth
+                                onChange={(e) =>
+                                  dispatch(
+                                    updateTextShowed({
+                                      id,
+                                      text: e.target.value,
+                                      duration,
+                                      isFinished,
+                                    })
+                                  )
+                                }
+                                value={text}
+                                size="small"
+                                sx={{
+                                  border: "none",
+                                  "& fieldset": { border: "none" },
+                                  input: {
+                                    color: snapshot.isDragging
+                                      ? "#fff"
+                                      : "#000",
+                                  },
+                                }}
+                              />
+                            </Box>
+                            <Box display="flex" component="span">
+                              <IconButton
+                                onClick={() => dispatch(removeHandler(id))}
+                              >
+                                <DeleteIcon
+                                  sx={{
+                                    color: snapshot.isDragging
+                                      ? "#fff"
+                                      : "#000",
+                                  }}
+                                />
+                              </IconButton>
+                            </Box>
+                            <Box display="flex" component="span">
+                              <IconButton
+                                sx={{
+                                  color: snapshot.isDragging ? "#fff" : "#000",
+                                }}
+                                onClick={() => dispatch(decrement(id))}
+                              >
+                                <IndeterminateCheckBoxOutlinedIcon />
+                              </IconButton>
+                              <Typography align="center">{duration}</Typography>
+                              <IconButton
+                                sx={{
+                                  color: snapshot.isDragging ? "#fff" : "#000",
+                                }}
+                                onClick={() => dispatch(increment(id))}
+                              >
+                                <AddBoxOutlinedIcon />
+                              </IconButton>
+                              <IconButton
+                                onClick={() => dispatch(schedule(id))}
+                              >
+                                <KeyboardArrowRightOutlinedIcon
+                                  sx={{
+                                    color: snapshot.isDragging
+                                      ? "#fff"
+                                      : "#000",
+                                  }}
+                                />
+                              </IconButton>
+                            </Box>
                       </ListItemText>
                     </ListItem>
                   )}
@@ -281,7 +280,12 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
           <Grid item>Total Duration: {totalDuration}</Grid>
         </Grid>
       </Box>
-      <Box width="100%" display="flex" flexDirection="row" justifyContent="center">
+      <Box
+        width="100%"
+        display="flex"
+        flexDirection="row"
+        justifyContent="center"
+      >
         <IconButton
           onClick={handleOnClick}
           onKeyDown={({ key }) => key === "Enter" && handleOnClick()}

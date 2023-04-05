@@ -6,7 +6,7 @@ const initialState: IModel[] = [];
 
 export const createCustomSlice = (name: string) => {
   const {
-    actions: { add, remove, completeStatus, reorder, update, updateTextShowed, increment, decrement },
+    actions: { add, remove, completeStatus, reorder, update, updateTextShowed, increment, decrement, schedule },
     reducer,
   } = createSlice({
     name,
@@ -24,6 +24,7 @@ export const createCustomSlice = (name: string) => {
             duration,
             createdAt: new Date().toLocaleString(),
             isTextShowed: false,
+            isScheduled: false
           } as IModel
         }),
       },
@@ -38,6 +39,10 @@ export const createCustomSlice = (name: string) => {
         const index = state.findIndex(({ id }) => id === action.payload);
         console.log(index);
         state.splice(index, 1);
+      },
+      schedule(state, action) {
+        const index = state.findIndex(({ id }) => id === action.payload);
+        state[index].isScheduled = true;
       },
       completeStatus(state, action: PayloadAction<TActionSlice>) {
         const index = state.findIndex(({ id }) => id === action.payload.id);
@@ -54,7 +59,6 @@ export const createCustomSlice = (name: string) => {
       },
       increment(state, action) {
         const index = state.findIndex(({ id }) => id === action.payload);
-        console.log(state[index].duration)
         state[index].duration = state[index].duration + 1;
       },
       decrement(state, action) {
@@ -66,7 +70,7 @@ export const createCustomSlice = (name: string) => {
   }});
 
   return {
-    actions: { add, remove, completeStatus, reorder, update, updateTextShowed, increment, decrement },
+    actions: { add, remove, completeStatus, reorder, update, updateTextShowed, increment, decrement, schedule },
     reducer,
   };
 };
