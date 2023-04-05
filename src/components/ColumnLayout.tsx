@@ -128,12 +128,12 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
           >
             {selectorState.map(
               (
-                { id, text, isFinished, createdAt, updatedAt, duration },
+                { id, text, isFinished, createdAt, updatedAt, duration, isScheduled },
                 index: number
               ) => (
                 <Draggable key={id} draggableId={id} index={index}>
                   {(provided, snapshot) => (
-                          <ListItem
+                      <ListItem
                       sx={{
                         transition: ".3s ease background-color",
                         color: snapshot.isDragging ? "#fff" : "#000",

@@ -1,11 +1,15 @@
-import Typography from '@mui/material/Typography';
 import { useSelector } from 'react-redux';
 import { StoreState } from '../../redux/store';
 import { inProgressSlice } from '../../redux/slice/inProgress';
-import ColumnLayout from '../ColumnLayout';
+import ScheduleLayout from '../ScheduleLayout';
+import { Typography } from '@mui/material';
+import { IModel } from '../../types';
 
 export function InProgressColumn() {
-  const { inProgress } = useSelector((state: StoreState) => state);
+  const { todo } = useSelector((state: StoreState) => state);
+  const scheduledTasks = (todoArr: IModel[]): IModel[] => {
+    return todoArr.filter((e) => e.isScheduled === true);
+  };
 
   const {
     actions: { completeStatus, remove, add, updateTextShowed, increment, decrement, schedule },
@@ -13,18 +17,18 @@ export function InProgressColumn() {
 
   return (
     <>
-      <Typography mb={3}>All inProgress tasks: {inProgress.length}</Typography>
-      <ColumnLayout
-        droppableId='inProgress'
-        labelText="Type 'in progress' item"
+      <Typography mb={6}>Schedule</Typography>
+      <ScheduleLayout
+        droppableId="progress"
         completedHandler={completeStatus}
         removeHandler={remove}
         addHandler={add}
-        selectorState={inProgress}
+        selectorState={todo}
         updateTextShowed={updateTextShowed}
         increment={increment}
         decrement={decrement}
         schedule={schedule}
+        scheduledTasks={scheduledTasks(todo)}
       />
     </>
   );

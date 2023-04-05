@@ -28,3 +28,19 @@ export interface IColumnLayoutProps {
   totalDuration?: number;
   schedule: (v: string) => AnyAction;
 }
+
+export interface IScheduleLayoutProps {
+  labelText?: string;
+  addHandler: (v: string, k: number) => AnyAction;
+  removeHandler: (v: string) => AnyAction;
+  completedHandler: (v: TActionSlice) => AnyAction;
+  selectorState: IModel[];
+  droppableId: string;
+  updateTextShowed: (v: IModel) => AnyAction;
+  increment: (v: string) => AnyAction;
+  decrement: (v: string) => AnyAction;
+  totalToDoTasks?: number;
+  totalDuration?: number;
+  schedule: (v: string) => AnyAction;
+  scheduledTasks: IModel[];
+}
